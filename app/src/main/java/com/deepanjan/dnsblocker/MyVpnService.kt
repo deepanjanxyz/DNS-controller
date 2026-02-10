@@ -12,48 +12,33 @@ class MyVpnService : VpnService() {
         if (intent?.action == "STOP") {
             stopVpn()
         } else {
-            startVpn()
+            val dnsIp = intent?.getStringExtra("DNS_IP") ?: "94.140.14.14"
+            startVpn(dnsIp)
         }
         return START_STICKY
     }
 
-    private fun startVpn() {
+    private fun startVpn(dnsIp: String) {
         if (vpnInterface != null) return
         try {
             val builder = Builder()
-            
-            // ১. লোকাল আইপি (ভিপিএন ইন্টারফেসের জন্য)
             builder.addAddress("10.0.0.2", 32)
             
-            // ২. অ্যাড ব্লকিং ডিএনএস (AdGuard + Cloudflare Family)
-            // এগুলো অটোমেটিক অ্যাড এবং ম্যালওয়্যার সাইট ব্লক করে
-            builder.addDnsServer("94.140.14.14") 
-            builder.addDnsServer("94.140.15.15")
-            builder.addDnsServer("1.1.1.2")      
+            // ইউজার যে DNS IP দেবে সেটাই এখানে সেট হবে
+            builder.addDnsServer(dnsIp)
             
-            // ৩. স্পিড বাড়ানোর সিক্রেট: আমরা সব রুট (0.0.0.0) অ্যাড করব না
-            // বরং ফোনকে ডিএনএস কুয়েরি পাঠাতে বাধ্য করব
-            // কোনো রুট অ্যাড না করলে ইন্টারনেট সরাসরি চলবে, শুধু ডিএনএস ফিল্টার হবে
-            
-            // ৪. সিস্টেমকে ডিএনএস ব্যবহারের জন্য ফোর্স করা
             builder.setBlocking(true)
-            builder.setSession("ABS Ultra Shield")
-            
+            builder.setSession("ABS Custom Shield")
             vpnInterface = builder.establish()
-            Log.d("VPN", "DNS-Only Shield Activated (Super Fast Mode)")
-            
+            Log.d("VPN", "Connected to Custom DNS: $dnsIp")
         } catch (e: Exception) {
-            Log.e("VPN", "Failed to start VPN: ${e.message}")
+            Log.e("VPN", "Failed: ${e.message}")
         }
     }
 
     private fun stopVpn() {
-        try {
-            vpnInterface?.close()
-            vpnInterface = null
-            stopSelf()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        vpnInterface?.close()
+        vpnInterface = null
+        stopSelf()
     }
 }
