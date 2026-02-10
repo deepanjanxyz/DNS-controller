@@ -1,36 +1,69 @@
 package com.deepanjan.dnsblocker
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.VpnService
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class MainActivity : AppCompatActivity() {
     private val VPN_REQUEST_CODE = 101
     private var isRunning = false
     
     private lateinit var btnVpn: Button
+    private lateinit var btnWhitelist: Button
     private lateinit var switchAds: Switch
     private lateinit var switchFamily: Switch
     private lateinit var switchCustom: Switch
     private lateinit var etCustomDns: EditText
     private lateinit var txtStatus: TextView
+    
+    // Stats Views
+    private lateinit var txtTotalReq: TextView
+    private lateinit var txtBlocked: TextView
+    private lateinit var txtDataSaved: TextView
+
+    // ব্রডকাস্ট রিসিভার (সার্ভিস থেকে ডাটা নেওয়ার জন্য)
+    private val statsReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val total = intent?.getLongExtra("TOTAL", 0) ?: 0
+            val blocked = intent?.getLongExtra("BLOCKED", 0) ?: 0
+            
+            // ডাটা সেভ ক্যালকুলেশন (গড়ে ১টা অ্যাড = ০.৫ এমবি)
+            val savedMb = String.format("%.1f MB", blocked * 0.5)
+
+            txtTotalReq.text = total.toString()
+            txtBlocked.text = blocked.toString()
+            txtDataSaved.text = savedMb
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // UI কানেকশন
         btnVpn = findViewById(R.id.vpnButton)
+        btnWhitelist = findViewById(R.id.btnWhitelist)
         switchAds = findViewById(R.id.switchAds)
         switchFamily = findViewById(R.id.switchFamily)
         switchCustom = findViewById(R.id.switchCustom)
         etCustomDns = findViewById(R.id.etCustomDns)
         txtStatus = findViewById(R.id.statusText)
+        txtTotalReq = findViewById(R.id.txtTotalReq)
+        txtBlocked = findViewById(R.id.txtBlocked)
+        txtDataSaved = findViewById(R.id.txtDataSaved)
 
-        // কাস্টম সুইচ অন করলে বাকিগুলো অফ হয়ে যাবে (স্মার্ট ফ্লো)
+        // রিসিভার রেজিস্টার করা
+        LocalBroadcastManager.getInstance(this).registerReceiver(statsReceiver, IntentFilter("VPN_STATS_UPDATE"))
+
+        // লজিক আগের মতোই...
         switchCustom.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 switchAds.isChecked = false
@@ -41,7 +74,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // অ্যাড বা ফ্যামিলি অন করলে কাস্টম অফ হয়ে যাবে
         val autoDisableCustom = CompoundButton.OnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 switchCustom.isChecked = false
@@ -53,6 +85,10 @@ class MainActivity : AppCompatActivity() {
 
         btnVpn.setOnClickListener {
             if (!isRunning) prepareAndStartVpn() else stopVpn()
+        }
+        
+        btnWhitelist.setOnClickListener {
+            Toast.makeText(this, "Whitelist feature coming in next update!", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -70,7 +106,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun determineDnsAndStart() {
-        // স্মার্ট লজিক: ইউজার কী কী টগল অন করেছে তার ওপর ভিত্তি করে সেরা DNS বেছে নেওয়া
         var dnsToUse = ""
         var modeName = ""
 
@@ -86,16 +121,16 @@ class MainActivity : AppCompatActivity() {
             val family = switchFamily.isChecked
 
             if (ads && family) {
-                dnsToUse = "94.140.14.15" // AdGuard Family (Ads + Adult Block)
-                modeName = "Ultra Shield (Ads + Family)"
+                dnsToUse = "94.140.14.15"
+                modeName = "Ultra Shield"
             } else if (ads) {
-                dnsToUse = "94.140.14.14" // AdGuard Default (Only Ads)
+                dnsToUse = "94.140.14.14"
                 modeName = "Ad-Blocker"
             } else if (family) {
-                dnsToUse = "1.1.1.3"      // Cloudflare Family (Only Malware + Adult)
+                dnsToUse = "1.1.1.3"
                 modeName = "Family Safe"
             } else {
-                Toast.makeText(this, "Please select at least one filter!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Select a filter!", Toast.LENGTH_SHORT).show()
                 return
             }
         }
@@ -125,5 +160,10 @@ class MainActivity : AppCompatActivity() {
         txtStatus.setTextColor(android.graphics.Color.WHITE)
         btnVpn.text = "ACTIVATE SHIELD"
         btnVpn.setBackgroundColor(android.graphics.Color.BLUE)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(statsReceiver)
     }
 }
