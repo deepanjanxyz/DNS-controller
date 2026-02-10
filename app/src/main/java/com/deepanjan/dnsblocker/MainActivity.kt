@@ -29,13 +29,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtBlocked: TextView
     private lateinit var txtDataSaved: TextView
 
-    // ব্রডকাস্ট রিসিভার (সার্ভিস থেকে ডাটা নেওয়ার জন্য)
+    // ব্রডকাস্ট রিসিভার (ডাটা আপডেট করার জন্য)
     private val statsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val total = intent?.getLongExtra("TOTAL", 0) ?: 0
             val blocked = intent?.getLongExtra("BLOCKED", 0) ?: 0
-            
-            // ডাটা সেভ ক্যালকুলেশন (গড়ে ১টা অ্যাড = ০.৫ এমবি)
             val savedMb = String.format("%.1f MB", blocked * 0.5)
 
             txtTotalReq.text = total.toString()
@@ -60,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         txtBlocked = findViewById(R.id.txtBlocked)
         txtDataSaved = findViewById(R.id.txtDataSaved)
 
-        // রিসিভার রেজিস্টার করা
         LocalBroadcastManager.getInstance(this).registerReceiver(statsReceiver, IntentFilter("VPN_STATS_UPDATE"))
 
         // লজিক আগের মতোই...
@@ -88,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
         
         btnWhitelist.setOnClickListener {
-            Toast.makeText(this, "Whitelist feature coming in next update!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Whitelist feature coming soon!", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -134,7 +131,6 @@ class MainActivity : AppCompatActivity() {
                 return
             }
         }
-
         startVpnService(dnsToUse, modeName)
     }
 
