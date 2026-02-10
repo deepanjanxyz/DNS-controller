@@ -11,8 +11,8 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 11
-        versionName "11.0-Victory"
+        versionCode 12
+        versionName "12.0-ServerEngine"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,7 +23,6 @@ android {
         }
     }
 
-    // Java 11 সাপোর্ট নিশ্চিত করা
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
