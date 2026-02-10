@@ -1,7 +1,9 @@
 image: eclipse-temurin:17-jdk-focal
+
 stages:
   - build
-build:
+
+build-job:
   stage: build
   script:
     - chmod +x gradlew
