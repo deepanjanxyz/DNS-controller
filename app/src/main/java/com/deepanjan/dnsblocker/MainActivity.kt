@@ -4,19 +4,19 @@ import android.app.Activity
 import android.content.Intent
 import android.net.VpnService
 import android.os.Bundle
-import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
     private val VPN_REQUEST_CODE = 101
     private var isShieldOn = false
-    private var isAdultFilterOn = false
     
     private lateinit var btnShield: ImageView
     private lateinit var txtStatus: TextView
-    private lateinit var cardFamily: View
-    private lateinit var statusFamily: TextView
+    private lateinit var switchFamily: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         btnShield = findViewById(R.id.btnShieldToggle)
         txtStatus = findViewById(R.id.txtStatus)
-        cardFamily = findViewById(R.id.cardFamily)
-        statusFamily = findViewById(R.id.statusFamily)
+        switchFamily = findViewById(R.id.switchFamily)
 
         btnShield.setOnClickListener {
             if (!isShieldOn) {
@@ -36,27 +35,18 @@ class MainActivity : AppCompatActivity() {
                 stopVpnService()
             }
         }
-
-        cardFamily.setOnClickListener {
-            isAdultFilterOn = !isAdultFilterOn
-            if (isAdultFilterOn) {
-                statusFamily.text = "ON"
-                statusFamily.setTextColor(android.graphics.Color.GREEN)
-                Toast.makeText(this, "Adult Filter Enabled", Toast.LENGTH_SHORT).show()
-            } else {
-                statusFamily.text = "OFF"
-                statusFamily.setTextColor(android.graphics.Color.RED)
-            }
-            // If running, restart to apply
+        
+        switchFamily.setOnCheckedChangeListener { _, isChecked ->
             if (isShieldOn) {
                 stopVpnService()
+                Toast.makeText(this, "Restarting Shield...", Toast.LENGTH_SHORT).show()
                 startVpnService()
             }
         }
     }
 
     private fun startVpnService() {
-        val dns = if (isAdultFilterOn) "94.140.14.15" else "94.140.14.14"
+        val dns = if (switchFamily.isChecked) "94.140.14.15" else "94.140.14.14"
         val intent = Intent(this, MyVpnService::class.java).putExtra("DNS_IP", dns)
         startService(intent)
         
@@ -74,13 +64,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI(active: Boolean) {
         if (active) {
-            btnShield.setColorFilter(android.graphics.Color.GREEN)
+            btnShield.setColorFilter(ContextCompat.getColor(this, R.color.neon_green))
             txtStatus.text = "SHIELD ACTIVE"
-            txtStatus.setTextColor(android.graphics.Color.GREEN)
+            txtStatus.setTextColor(ContextCompat.getColor(this, R.color.neon_green))
+            
+            // Pulsating Animation
+            val anim = AlphaAnimation(0.5f, 1.0f)
+            anim.duration = 1000
+            anim.repeatMode = Animation.REVERSE
+            anim.repeatCount = Animation.INFINITE
+            btnShield.startAnimation(anim)
         } else {
-            btnShield.setColorFilter(android.graphics.Color.parseColor("#00E5FF"))
-            txtStatus.text = "TAP TO CONNECT"
+            btnShield.setColorFilter(ContextCompat.getColor(this, R.color.neon_blue))
+            txtStatus.text = "TAP TO ACTIVATE"
             txtStatus.setTextColor(android.graphics.Color.GRAY)
+            btnShield.clearAnimation()
         }
     }
 

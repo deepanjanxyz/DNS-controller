@@ -11,8 +11,8 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0-Shield"
+        versionCode 2
+        versionName "2.0-Pro"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,10 +23,10 @@ android {
         }
     }
     
-    // এই অংশটাই আসল ফিক্স - ছোটখাটো ভুলে বিল্ড আটকাবে না
-    lintOptions {
-        checkReleaseBuilds false
+    // Lint Error আটকানোর সঠিক নিয়ম
+    lint {
         abortOnError false
+        checkReleaseBuilds false
     }
 
     compileOptions {
