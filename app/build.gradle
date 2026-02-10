@@ -15,18 +15,12 @@ android {
         versionName "1.0"
     }
 
-    // এই অংশটা ১০০০% জরুরি। এটা থাকলে ছোটখাটো ওয়ার্নিংয়ে বিল্ড আটকাবে না।
-    lintOptions {
-        abortOnError false
-        checkReleaseBuilds false
-    }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
     buildFeatures {
         compose true
