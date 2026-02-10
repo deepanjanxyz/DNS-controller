@@ -1,2 +1,0 @@
--keep class android.net.VpnService { *; }
--keep class com.deepanjan.dnsblocker.service.** { *; }

@@ -12,12 +12,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # এখানে আমরা gradlew ব্যবহার না করে সরাসরি অ্যাকশন দিয়ে Gradle সেট করছি
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.2'
+          cache-disabled: true
           
-      # ./gradlew এর বদলে সরাসরি gradle কমান্ড
       - name: Build APK
         run: gradle assembleDebug --stacktrace
