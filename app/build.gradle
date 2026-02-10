@@ -11,8 +11,8 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 8
-        versionName "8.0-SuperShield"
+        versionCode 9
+        versionName "9.0-GoldenFix"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,18 +23,19 @@ android {
         }
     }
 
-    // জাভা ভার্সন আপডেট
+    // Java 1.8 (Java 11 সার্ভারে এটা সেফ)
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
     
-    lint {
-        abortOnError false
+    // Gradle 7.x এ এই স্টাইলটা কাজ করে
+    lintOptions {
         checkReleaseBuilds false
+        abortOnError false
     }
 }
 
