@@ -1,8 +1,8 @@
 package com.deepanjan.dnsblocker
 
+import android.content.Intent
 import android.net.VpnService
 import android.os.ParcelFileDescriptor
-import android.content.Intent
 import android.util.Log
 
 class MyVpnService : VpnService() {
@@ -13,39 +13,40 @@ class MyVpnService : VpnService() {
             stopVpn()
             return START_NOT_STICKY
         }
+        startVpn()
+        return START_STICKY
+    }
 
-        // AdGuard DNS Servers (অ্যাড ব্লক করার জন্য)
-        val dnsServers = arrayOf("94.140.14.14", "94.140.15.15")
-
+    private fun startVpn() {
         try {
+            if (vpnInterface != null) return
+            
             val builder = Builder()
-                .setSession("Net Shield")
-                .addAddress("10.0.0.2", 32) // লোকাল ভার্চুয়াল অ্যাড্রেস
-                .addRoute("0.0.0.0", 0)    // সব ট্রাফিক রুট করা হচ্ছে
-
-            // আসল কাজ এখানে: AdGuard DNS যোগ করা
-            for (dns in dnsServers) {
-                builder.addDnsServer(dns)
-            }
+            builder.setSession("Net Shield")
+            builder.addAddress("10.0.0.2", 32)
+            
+            // ১. AdGuard DNS সার্ভারগুলো যোগ করা (অ্যাড ব্লকিংয়ের জন্য)
+            builder.addDnsServer("94.140.14.14")
+            builder.addDnsServer("94.140.15.15")
+            
+            // ২. এই লাইনটাই আসল - সব ইন্টারনেট ট্রাফিককে ভিপিএন-এর ভেতর দিয়ে পাঠানো
+            builder.addRoute("0.0.0.0", 0) 
+            
+            // ৩. আইপিভি৬ ডিজেবল করা (অনেক সময় লিক হওয়ার কারণ এটা)
+            builder.allowFamily(android.system.OsConstants.AF_INET)
+            builder.setBlocking(true)
 
             vpnInterface = builder.establish()
-            Log.d("NetShield", "VPN Started with AdGuard DNS")
+            Log.d("NetShield", "VPN Shield Activated with Global Route")
             
         } catch (e: Exception) {
-            Log.e("NetShield", "Error starting VPN", e)
+            Log.e("NetShield", "Failed: ${e.message}")
         }
-
-        return START_STICKY
     }
 
     private fun stopVpn() {
         vpnInterface?.close()
         vpnInterface = null
         stopSelf()
-    }
-
-    override fun onDestroy() {
-        stopVpn()
-        super.onDestroy()
     }
 }
