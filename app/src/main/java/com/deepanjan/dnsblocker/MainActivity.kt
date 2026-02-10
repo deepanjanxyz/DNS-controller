@@ -9,7 +9,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Text(text = "Step by Step Build!")
+            Text(text = "Pro Model Fix Works!")
         }
     }
 }
