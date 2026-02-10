@@ -11,9 +11,8 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 3
-        versionName "3.0-Fix"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionCode 5
+        versionName "5.0-Stable"
     }
 
     buildTypes {
@@ -22,8 +21,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    
-    // এই অংশটা সবচেয়ে জরুরি - Lint Error একদম ইগনোর করা হবে
+
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
