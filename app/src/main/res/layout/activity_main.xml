@@ -2,61 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     android:background="#121212"
-    android:padding="20dp">
-
-    <TextView
-        android:id="@+id/serverStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Server: Checking..."
-        android:textColor="#FFFFFF"
-        android:layout_gravity="end"/>
-
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_abs_logo"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+    android:padding="25dp"
+    android:gravity="center">
 
     <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="READY TO SHIELD"
+        android:text="READY"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:layout_marginBottom="30dp"/>
+
+    <RadioGroup
+        android:id="@+id/modeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <RadioButton android:id="@+id/modeAdBlock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ad-Block Mode" android:textColor="#FFFFFF" android:checked="true"/>
+        <RadioButton android:id="@+id/modeFamily" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Family/Safe Mode" android:textColor="#FFFFFF"/>
+        <RadioButton android:id="@+id/modeCustom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Custom DNS Mode" android:textColor="#FFFFFF"/>
+    </RadioGroup>
 
     <EditText
         android:id="@+id/etCustomDns"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:hint="Enter DNS IP (e.g. 1.1.1.1)"
+        android:layout_height="50dp"
+        android:hint="Enter IP (e.g. 8.8.8.8)"
         android:textColor="#FFFFFF"
         android:textColorHint="#666666"
+        android:visibility="gone"
         android:background="@android:drawable/edit_text"
-        android:padding="10dp"
-        android:layout_marginBottom="20dp"
-        android:inputType="text"/>
+        android:layout_marginBottom="20dp"/>
 
     <Button
         android:id="@+id/vpnButton"
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="65dp"
-        android:text="START CUSTOM SHIELD"
-        android:backgroundTint="#2196F3"/>
-        
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AdGuard: 94.140.14.14 | Cloudflare: 1.1.1.1"
-        android:textColor="#AAAAAA"
-        android:textSize="10sp"
-        android:layout_marginTop="15dp"/>
+        android:text="START"
+        android:backgroundTint="#2196F3"
+        android:textSize="18sp"/>
 
 </LinearLayout>
