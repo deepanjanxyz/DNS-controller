@@ -15,7 +15,7 @@ android {
         versionName "1.0"
     }
 
-    // লিন্ট এবং টেস্ট সব বন্ধ
+    // এই লাইনটা জীবন বাঁচাবে (এরর ইগনোর করবে)
     lintOptions {
         abortOnError false
         checkReleaseBuilds false
@@ -28,7 +28,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    // কোনো কম্পোজ ফিচার নেই, তাই এরর খাওয়ার চান্স নেই
 }
 
 dependencies {

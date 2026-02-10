@@ -18,23 +18,13 @@ class MyVpnService : VpnService() {
     }
 
     private fun startVpn() {
-        if (vpnInterface != null) return // Already running
+        if (vpnInterface != null) return
         try {
             val builder = Builder()
-            
-            // ১. ভার্চুয়াল আইপি সেট করা
             builder.addAddress("10.0.0.2", 32)
-            
-            // ২. সব ট্রাফিক ভিপিএন-এ ঘোরানো (আপাতত টেস্টের জন্য)
             builder.addRoute("0.0.0.0", 0)
-            
-            // ৩. কানেকশন নাম
-            builder.setSession("DNS Blocker Pro")
-            
-            // ৪. ইন্টারফেস তৈরি
+            builder.setSession("ABS VPN")
             vpnInterface = builder.establish()
-            Log.d("VPN", "VPN Interface Created")
-            
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -45,14 +35,8 @@ class MyVpnService : VpnService() {
             vpnInterface?.close()
             vpnInterface = null
             stopSelf()
-            Log.d("VPN", "VPN Stopped")
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        stopVpn()
     }
 }

@@ -20,9 +20,8 @@ jobs:
       - name: Build APK
         run: gradle assembleDebug --stacktrace
 
-      # এই অংশটা নতুন! এটা APK ফাইল খুঁজে বের করে তোকে দেবে
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: DNS-Controller-App
+          name: ABS-VPN-App
           path: app/build/outputs/apk/debug/app-debug.apk
