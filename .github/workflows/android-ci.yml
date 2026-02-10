@@ -6,14 +6,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
-          
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
 
+      # এখানে আমরা gradlew ব্যবহার না করে সরাসরি অ্যাকশন দিয়ে Gradle সেট করছি
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.2'
+          
+      # ./gradlew এর বদলে সরাসরি gradle কমান্ড
       - name: Build APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: gradle assembleDebug --stacktrace
