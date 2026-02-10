@@ -8,6 +8,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     private val VPN_REQUEST_CODE = 101
@@ -17,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnDownload: Button
     private lateinit var txtStatus: TextView
     private lateinit var txtFilters: TextView
+    private lateinit var txtServerStatus: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,27 +30,28 @@ class MainActivity : AppCompatActivity() {
         btnDownload = findViewById(R.id.downloadButton)
         txtStatus = findViewById(R.id.statusText)
         txtFilters = findViewById(R.id.filterStats)
+        txtServerStatus = findViewById(R.id.serverStatus)
 
-        // হ্যাকার লিস্ট ডাউনলোড বাটন
+        // অ্যাপ খুললেই সার্ভার চেক করবে
+        checkServerConnection()
+
         btnDownload.setOnClickListener {
-            txtFilters.text = "Downloading Hacker Database..."
+            txtFilters.text = "Fetching from Server..."
             btnDownload.isEnabled = false
             
             FilterManager.downloadFilterList(this) { success, count ->
                 runOnUiThread {
                     btnDownload.isEnabled = true
                     if (success) {
-                        txtFilters.text = "Active Filters: $count Rules"
-                        Toast.makeText(this, "List Updated Successfully!", Toast.LENGTH_SHORT).show()
+                        txtFilters.text = "Active Rules: $count"
+                        Toast.makeText(this, "Filters Updated!", Toast.LENGTH_SHORT).show()
                     } else {
-                        txtFilters.text = "Download Failed!"
-                        Toast.makeText(this, "Check Internet Connection", Toast.LENGTH_SHORT).show()
+                        txtFilters.text = "Update Failed!"
                     }
                 }
             }
         }
 
-        // VPN কানেক্ট বাটন
         btnVpn.setOnClickListener {
             if (!isRunning) {
                 val intent = VpnService.prepare(this)
@@ -54,6 +59,31 @@ class MainActivity : AppCompatActivity() {
                 else startVpn()
             } else {
                 stopVpn()
+            }
+        }
+    }
+
+    private fun checkServerConnection() {
+        thread {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder().url("https://dns-controller-server.onrender.com/").build()
+                val response = client.newCall(request).execute()
+                
+                runOnUiThread {
+                    if (response.isSuccessful) {
+                        txtServerStatus.text = "Server: Online ●"
+                        txtServerStatus.setTextColor(android.graphics.Color.GREEN)
+                    } else {
+                        txtServerStatus.text = "Server: Online (API Issue) ○"
+                        txtServerStatus.setTextColor(android.graphics.Color.YELLOW)
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    txtServerStatus.text = "Server: Offline ○"
+                    txtServerStatus.setTextColor(android.graphics.Color.RED)
+                }
             }
         }
     }
@@ -68,9 +98,9 @@ class MainActivity : AppCompatActivity() {
     private fun startVpn() {
         startService(Intent(this, MyVpnService::class.java))
         isRunning = true
-        txtStatus.text = "SHIELD ACTIVE 🛡️"
+        txtStatus.text = "PROTECTION ACTIVE"
         txtStatus.setTextColor(android.graphics.Color.GREEN)
-        btnVpn.text = "DISCONNECT"
+        btnVpn.text = "STOP SHIELD"
         btnVpn.setBackgroundColor(android.graphics.Color.RED)
     }
 
@@ -79,9 +109,9 @@ class MainActivity : AppCompatActivity() {
         intent.action = "STOP"
         startService(intent)
         isRunning = false
-        txtStatus.text = "PROTECTION: OFF"
+        txtStatus.text = "PROTECTION INACTIVE"
         txtStatus.setTextColor(android.graphics.Color.RED)
-        btnVpn.text = "CONNECT VPN"
+        btnVpn.text = "START SHIELD"
         btnVpn.setBackgroundColor(android.graphics.Color.BLUE)
     }
 }

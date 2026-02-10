@@ -7,6 +7,16 @@
     android:background="#121212"
     android:padding="20dp">
 
+    <TextView
+        android:id="@+id/serverStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Server: Checking..."
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:layout_gravity="end"
+        android:layout_marginBottom="20dp"/>
+
     <ImageView
         android:layout_width="120dp"
         android:layout_height="120dp"
@@ -17,34 +27,34 @@
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PROTECTION: OFF"
+        android:text="PROTECTION INACTIVE"
         android:textColor="#FF5252"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/filterStats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Filters Loaded"
+        android:text="Database: No rules loaded"
         android:textColor="#AAAAAA"
         android:textSize="14sp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_marginBottom="40dp"/>
 
     <Button
         android:id="@+id/downloadButton"
         android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="UPDATE HACKER LIST"
+        android:layout_height="55dp"
+        android:text="REFRESH DATABASE"
         android:backgroundTint="#FF9800"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="15dp"/>
 
     <Button
         android:id="@+id/vpnButton"
         android:layout_width="250dp"
-        android:layout_height="60dp"
-        android:text="CONNECT VPN"
+        android:layout_height="65dp"
+        android:text="START SHIELD"
         android:textSize="18sp"
         android:backgroundTint="#2196F3"/>
 
