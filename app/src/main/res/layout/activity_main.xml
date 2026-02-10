@@ -3,14 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212">
+    android:background="@drawable/main_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="25dp"
         android:gravity="center_horizontal">
+
+        <com.airbnb.android.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:lottie_url="https://assets10.lottiefiles.com/packages/lf20_m6cu9mqa.json"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"/>
 
         <TextView
             android:id="@+id/statusText"
@@ -18,148 +28,52 @@
             android:layout_height="wrap_content"
             android:text="SYSTEM READY"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"/>
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="30dp"/>
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:rowCount="2"
             android:columnCount="2"
-            android:alignmentMode="alignMargins"
             android:layout_marginBottom="30dp">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="8dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <TextView android:id="@+id/txtTotalReq" android:text="0" android:textColor="#2196F3" android:textSize="24sp" android:textStyle="bold"/>
-                    <TextView android:text="Requests" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </GridLayout>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="8dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <TextView android:id="@+id/txtBlocked" android:text="0" android:textColor="#FF5252" android:textSize="24sp" android:textStyle="bold"/>
-                    <TextView android:text="Blocked" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="8dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <TextView android:id="@+id/txtDataSaved" android:text="0 MB" android:textColor="#4CAF50" android:textSize="24sp" android:textStyle="bold"/>
-                    <TextView android:text="Data Saved" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="8dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <TextView android:text="100%" android:textColor="#FFC107" android:textSize="24sp" android:textStyle="bold"/>
-                    <TextView android:text="Battery Health" android:textColor="#AAAAAA" android:textSize="12sp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </GridLayout>
-
-        <TextView android:text="FILTERS" android:textColor="#666666" android:textSize="12sp" android:layout_gravity="start" android:layout_marginBottom="10dp"/>
-        
-        <Switch
-            android:id="@+id/switchAds"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Block Ads &amp; Trackers"
-            android:textColor="#FFFFFF"
-            android:minHeight="48dp"
-            android:layout_marginBottom="10dp"/>
+            android:background="#33000000"
+            android:padding="15dp"
+            android:orientation="vertical">
+            
+            <Switch
+                android:id="@+id/switchAds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🛡️ Block Ads &amp; Malware"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="15dp"/>
 
-        <Switch
-            android:id="@+id/switchFamily"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Family Shield (Adult Block)"
-            android:textColor="#FFFFFF"
-            android:minHeight="48dp"
-            android:layout_marginBottom="10dp"/>
-
-        <Switch
-            android:id="@+id/switchCustom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Use Custom DNS"
-            android:textColor="#FF9800"
-            android:minHeight="48dp"
-            android:layout_marginBottom="10dp"/>
-
-        <EditText
-            android:id="@+id/etCustomDns"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Enter IP (e.g. 1.1.1.1)"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#666666"
-            android:background="@android:drawable/edit_text"
-            android:visibility="gone"
-            android:layout_marginBottom="20dp"/>
-
-        <Button
-            android:id="@+id/btnWhitelist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="MANAGE WHITELIST (BETA)"
-            android:backgroundTint="#444444"
-            android:textColor="#AAAAAA"
-            android:layout_marginBottom="20dp"/>
+            <Switch
+                android:id="@+id/switchFamily"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🔞 Family Safe Mode"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="15dp"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/vpnButton"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="ACTIVATE SHIELD"
-            android:backgroundTint="#2196F3"
-            android:textSize="16sp"/>
+            android:layout_height="65dp"
+            android:text="ACTIVATE PROTECTION"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            android:backgroundTint="#00E676"/>
 
     </LinearLayout>
 </ScrollView>
