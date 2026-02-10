@@ -11,8 +11,8 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 9
-        versionName "9.0-GoldenFix"
+        versionCode 10
+        versionName "10.0-FinalHope"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,7 +23,7 @@ android {
         }
     }
 
-    // Java 1.8 (Java 11 সার্ভারে এটা সেফ)
+    // Java 11 সাপোর্ট (যেটা গিটহাবে আছে)
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -32,7 +32,7 @@ android {
         jvmTarget = '1.8'
     }
     
-    // Gradle 7.x এ এই স্টাইলটা কাজ করে
+    // কোনো এরর পাত্তা দেব না
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
