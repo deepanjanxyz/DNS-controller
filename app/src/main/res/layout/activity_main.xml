@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:text="Pipeline Fixed Successfully!"
-    android:textSize="24sp" />
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#F0F0F0">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginBottom="30dp"/>
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VPN is OFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/vpnButton"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="Start VPN"
+        android:textSize="18sp"
+        android:backgroundTint="#2196F3"/>
+
+</LinearLayout>
