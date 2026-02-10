@@ -11,23 +11,40 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:src="@drawable/ic_abs_logo"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="20dp"/>
 
     <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="VPN DISCONNECTED"
+        android:text="PROTECTION: OFF"
         android:textColor="#FF5252"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/filterStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Filters Loaded"
+        android:textColor="#AAAAAA"
+        android:textSize="14sp"
         android:layout_marginBottom="30dp"/>
 
     <Button
+        android:id="@+id/downloadButton"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="UPDATE HACKER LIST"
+        android:backgroundTint="#FF9800"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
         android:id="@+id/vpnButton"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="60dp"
-        android:text="CONNECT"
+        android:text="CONNECT VPN"
         android:textSize="18sp"
         android:backgroundTint="#2196F3"/>
 

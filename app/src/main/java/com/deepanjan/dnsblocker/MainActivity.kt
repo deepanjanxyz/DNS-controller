@@ -6,22 +6,48 @@ import android.net.VpnService
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private val VPN_REQUEST_CODE = 101
     private var isRunning = false
-    private lateinit var btn: Button
-    private lateinit var txt: TextView
+    
+    private lateinit var btnVpn: Button
+    private lateinit var btnDownload: Button
+    private lateinit var txtStatus: TextView
+    private lateinit var txtFilters: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btn = findViewById(R.id.vpnButton)
-        txt = findViewById(R.id.statusText)
+        btnVpn = findViewById(R.id.vpnButton)
+        btnDownload = findViewById(R.id.downloadButton)
+        txtStatus = findViewById(R.id.statusText)
+        txtFilters = findViewById(R.id.filterStats)
 
-        btn.setOnClickListener {
+        // হ্যাকার লিস্ট ডাউনলোড বাটন
+        btnDownload.setOnClickListener {
+            txtFilters.text = "Downloading Hacker Database..."
+            btnDownload.isEnabled = false
+            
+            FilterManager.downloadFilterList(this) { success, count ->
+                runOnUiThread {
+                    btnDownload.isEnabled = true
+                    if (success) {
+                        txtFilters.text = "Active Filters: $count Rules"
+                        Toast.makeText(this, "List Updated Successfully!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        txtFilters.text = "Download Failed!"
+                        Toast.makeText(this, "Check Internet Connection", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        // VPN কানেক্ট বাটন
+        btnVpn.setOnClickListener {
             if (!isRunning) {
                 val intent = VpnService.prepare(this)
                 if (intent != null) startActivityForResult(intent, VPN_REQUEST_CODE)
@@ -42,10 +68,10 @@ class MainActivity : AppCompatActivity() {
     private fun startVpn() {
         startService(Intent(this, MyVpnService::class.java))
         isRunning = true
-        txt.text = "VPN CONNECTED 🛡️"
-        txt.setTextColor(android.graphics.Color.GREEN)
-        btn.text = "DISCONNECT"
-        btn.setBackgroundColor(android.graphics.Color.RED)
+        txtStatus.text = "SHIELD ACTIVE 🛡️"
+        txtStatus.setTextColor(android.graphics.Color.GREEN)
+        btnVpn.text = "DISCONNECT"
+        btnVpn.setBackgroundColor(android.graphics.Color.RED)
     }
 
     private fun stopVpn() {
@@ -53,9 +79,9 @@ class MainActivity : AppCompatActivity() {
         intent.action = "STOP"
         startService(intent)
         isRunning = false
-        txt.text = "VPN DISCONNECTED"
-        txt.setTextColor(android.graphics.Color.RED)
-        btn.text = "CONNECT"
-        btn.setBackgroundColor(android.graphics.Color.BLUE)
+        txtStatus.text = "PROTECTION: OFF"
+        txtStatus.setTextColor(android.graphics.Color.RED)
+        btnVpn.text = "CONNECT VPN"
+        btnVpn.setBackgroundColor(android.graphics.Color.BLUE)
     }
 }

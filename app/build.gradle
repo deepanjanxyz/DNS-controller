@@ -11,11 +11,10 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
     }
 
-    // এই লাইনটা জীবন বাঁচাবে (এরর ইগনোর করবে)
     lintOptions {
         abortOnError false
         checkReleaseBuilds false
@@ -35,4 +34,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // নতুন: ইন্টারনেট থেকে ফাইল ডাউনলোড করার জন্য
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }
