@@ -11,8 +11,8 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 10
-        versionName "10.0-FinalHope"
+        versionCode 11
+        versionName "11.0-Victory"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,7 +23,7 @@ android {
         }
     }
 
-    // Java 11 সাপোর্ট (যেটা গিটহাবে আছে)
+    // Java 11 সাপোর্ট নিশ্চিত করা
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -32,7 +32,6 @@ android {
         jvmTarget = '1.8'
     }
     
-    // কোনো এরর পাত্তা দেব না
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
