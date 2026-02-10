@@ -11,8 +11,8 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 2
-        versionName "2.0-Pro"
+        versionCode 3
+        versionName "3.0-Fix"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,10 +23,10 @@ android {
         }
     }
     
-    // Lint Error আটকানোর সঠিক নিয়ম
-    lint {
-        abortOnError false
+    // এই অংশটা সবচেয়ে জরুরি - Lint Error একদম ইগনোর করা হবে
+    lintOptions {
         checkReleaseBuilds false
+        abortOnError false
     }
 
     compileOptions {
