@@ -21,19 +21,28 @@ class MyVpnService : VpnService() {
         if (vpnInterface != null) return
         try {
             val builder = Builder()
-            // আমরা এখন শুধু DNS সার্ভার সেট করছি, পুরো ট্রাফিক আটকাচ্ছি না
-            // যাতে ইন্টারনেট নরমাল চলে।
+            
+            // ১. লোকাল অ্যাড্রেস
             builder.addAddress("10.0.0.2", 32)
-            builder.addDnsServer("8.8.8.8") 
-            builder.setSession("ABS Shield Active")
             
-            // এই লাইনটা ইন্টারনেট বন্ধ করছিল, এটা এখন কমেন্ট আউট থাক
-            // builder.addRoute("0.0.0.0", 0) 
+            // ২. AdGuard বা Cloudflare এর সিকিউর ডিএনএস ব্যবহার করছি (টেস্টের জন্য)
+            // এটা হ্যাকার সাইটগুলোকে অটোমেটিক ব্লক করে
+            builder.addDnsServer("94.140.14.14") // AdGuard DNS
+            builder.addDnsServer("1.1.1.2")      // Cloudflare Security DNS
             
+            // ৩. সব ট্রাফিক ভিপিএন-এর নজরদারিতে আনা
+            builder.addRoute("0.0.0.0", 0)
+            
+            // ৪. সিস্টেমকে বলা যে এই ডিএনএস-ই ফাইনাল
+            builder.allowFamily(android.system.OsConstants.AF_INET)
+            builder.setBlocking(true)
+            
+            builder.setSession("ABS Ultra Shield")
             vpnInterface = builder.establish()
-            Log.d("VPN", "VPN Started in Safe Mode")
+            
+            Log.d("VPN", "VPN Shield Activated with DNS Force")
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("VPN", "Failed to start VPN: ${e.message}")
         }
     }
 
