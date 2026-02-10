@@ -8,16 +8,17 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
     private val VPN_REQUEST_CODE = 101
     private var isShieldOn = false
+    private var isAdultFilterOn = false
     
     private lateinit var btnShield: ImageView
     private lateinit var txtStatus: TextView
     private lateinit var btnAdultFilter: LinearLayout
     private lateinit var statusAdult: TextView
-    private var isAdultFilterOn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +41,14 @@ class MainActivity : AppCompatActivity() {
 
         btnAdultFilter.setOnClickListener {
             isAdultFilterOn = !isAdultFilterOn
-            statusAdult.text = if (isAdultFilterOn) "ACTIVE" else "OFF"
-            statusAdult.setTextColor(if (isAdultFilterOn) android.graphics.Color.GREEN else android.graphics.Color.RED)
-            if (isShieldOn) {
-                stopVpnService()
-                startVpnService()
+            if (isAdultFilterOn) {
+                statusAdult.text = "ON"
+                statusAdult.setTextColor(ContextCompat.getColor(this, R.color.neon_green))
+            } else {
+                statusAdult.text = "OFF"
+                statusAdult.setTextColor(ContextCompat.getColor(this, R.color.neon_red))
             }
+            // রিস্টার্ট করার দরকার নেই, পরের বার কানেক্ট করলেই নতুন ডিএনএস পাবে
         }
     }
 
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         val dns = if (isAdultFilterOn) "94.140.14.15" else "94.140.14.14"
         val intent = Intent(this, MyVpnService::class.java).putExtra("DNS_IP", dns)
         startService(intent)
+        
         isShieldOn = true
         updateUI(true)
     }
@@ -60,24 +64,25 @@ class MainActivity : AppCompatActivity() {
     private fun stopVpnService() {
         val intent = Intent(this, MyVpnService::class.java).setAction("STOP")
         startService(intent)
+        
         isShieldOn = false
         updateUI(false)
     }
 
     private fun updateUI(active: Boolean) {
         if (active) {
-            btnShield.setColorFilter(android.graphics.Color.GREEN)
+            btnShield.setColorFilter(ContextCompat.getColor(this, R.color.neon_green))
             txtStatus.text = "SHIELD PROTECTED"
-            txtStatus.setTextColor(android.graphics.Color.GREEN)
+            txtStatus.setTextColor(ContextCompat.getColor(this, R.color.neon_green))
             
-            val pulse = AlphaAnimation(0.4f, 1.0f)
-            pulse.duration = 800
+            val pulse = AlphaAnimation(0.5f, 1.0f)
+            pulse.duration = 1000
             pulse.repeatMode = Animation.REVERSE
             pulse.repeatCount = Animation.INFINITE
             btnShield.startAnimation(pulse)
         } else {
-            btnShield.setColorFilter(android.graphics.Color.parseColor("#00E5FF"))
-            txtStatus.text = "TAP TO ACTIVATE"
+            btnShield.setColorFilter(ContextCompat.getColor(this, R.color.neon_blue))
+            txtStatus.text = "TAP TO CONNECT"
             txtStatus.setTextColor(android.graphics.Color.GRAY)
             btnShield.clearAnimation()
         }

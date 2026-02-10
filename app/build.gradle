@@ -11,8 +11,9 @@ android {
         applicationId "com.deepanjan.dnsblocker"
         minSdk 24
         targetSdk 33
-        versionCode 5
-        versionName "5.0-Stable"
+        versionCode 6
+        versionName "6.0-FinalFix"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -21,18 +22,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
-
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    
+    // Lint অফ করে রাখা হলো যাতে ছোটখাটো ওয়ার্নিং-এ বিল্ড না থামে
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
