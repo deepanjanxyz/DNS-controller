@@ -1,15 +1,11 @@
 package com.deepanjan.dnsblocker
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.material3.Text
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Text(text = "Pro Model Fix Works!")
-        }
+        setContentView(R.layout.activity_main)
     }
 }
