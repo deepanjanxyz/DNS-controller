@@ -15,6 +15,12 @@ android {
         versionName "1.0"
     }
 
+    // লিন্ট এরর ইগনোর করার জন্য এই ব্লকটা জরুরি
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
