@@ -25,47 +25,87 @@ class MainActivity : AppCompatActivity() {
         etCustomDns = findViewById(R.id.etCustomDns)
         txtStatus = findViewById(R.id.statusText)
 
-        // মোড পাল্টালে ইনপুট বক্স হাইড/শো হবে
+        // মোড পাল্টালে ইনপুট বক্স দেখাবে কি না
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            etCustomDns.visibility = if (checkedId == R.id.modeCustom) android.view.View.VISIBLE else android.view.View.GONE
+            if (checkedId == R.id.modeCustom) {
+                etCustomDns.visibility = android.view.View.VISIBLE
+            } else {
+                etCustomDns.visibility = android.view.View.GONE
+            }
         }
 
         btnVpn.setOnClickListener {
-            if (!isRunning) startSelectedMode() else stopVpn()
+            if (!isRunning) {
+                prepareAndStartVpn()
+            } else {
+                stopVpn()
+            }
+        }
+    }
+
+    private fun prepareAndStartVpn() {
+        // ১. আগে চেক করি পারমিশন আছে কি না
+        val intent = VpnService.prepare(this)
+        if (intent != null) {
+            // পারমিশন নেই, তাই চাইছি
+            startActivityForResult(intent, VPN_REQUEST_CODE)
+        } else {
+            // পারমিশন অলরেডি আছে, সরাসরি শুরু কর
+            startSelectedMode()
+        }
+    }
+
+    // এই ফাংশনটা পারমিশন পাওয়ার পর কল হবে
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == VPN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // ফিক্স: আগে এখানে ভুল ছিল, এখন সরাসরি মোড স্টার্ট হবে
+            startSelectedMode()
         }
     }
 
     private fun startSelectedMode() {
+        // রেডিও বাটন থেকে আইপি বেছে নেওয়া
         val selectedDns = when (radioGroup.checkedRadioButtonId) {
-            R.id.modeAdBlock -> "94.140.14.14" // AdGuard
+            R.id.modeAdBlock -> "94.140.14.14" // AdGuard DNS
             R.id.modeFamily -> "1.1.1.3"      // Cloudflare Family
-            else -> etCustomDns.text.toString().trim() // Custom
+            R.id.modeCustom -> etCustomDns.text.toString().trim()
+            else -> "94.140.14.14" // ডিফল্ট
         }
 
-        if (selectedDns.isEmpty()) {
-            Toast.makeText(this, "Enter DNS IP first!", Toast.LENGTH_SHORT).show()
+        // যদি কাস্টম মোডে আইপি না দেয়
+        if (radioGroup.checkedRadioButtonId == R.id.modeCustom && selectedDns.isEmpty()) {
+            Toast.makeText(this, "Please enter a DNS IP", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val intent = VpnService.prepare(this)
-        if (intent != null) startActivityForResult(intent, VPN_REQUEST_CODE)
-        else {
-            val vpnIntent = Intent(this, MyVpnService::class.java)
-            vpnIntent.putExtra("DNS_IP", selectedDns)
-            startService(vpnIntent)
-            updateUI(true)
-        }
+        // সার্ভিস চালু করা
+        val vpnIntent = Intent(this, MyVpnService::class.java)
+        vpnIntent.putExtra("DNS_IP", selectedDns)
+        startService(vpnIntent)
+        
+        updateUI(true)
     }
 
     private fun stopVpn() {
-        startService(Intent(this, MyVpnService::class.java).apply { action = "STOP" })
+        val intent = Intent(this, MyVpnService::class.java)
+        intent.action = "STOP"
+        startService(intent)
         updateUI(false)
     }
 
     private fun updateUI(running: Boolean) {
         isRunning = running
-        txtStatus.text = if (running) "SHIELD ACTIVE" else "READY"
-        txtStatus.setTextColor(if (running) android.graphics.Color.GREEN else android.graphics.Color.WHITE)
-        btnVpn.text = if (running) "STOP" else "START"
+        if (running) {
+            txtStatus.text = "SHIELD ACTIVE 🛡️"
+            txtStatus.setTextColor(android.graphics.Color.GREEN)
+            btnVpn.text = "STOP PROTECTION"
+            btnVpn.setBackgroundColor(android.graphics.Color.RED)
+        } else {
+            txtStatus.text = "READY TO CONNECT"
+            txtStatus.setTextColor(android.graphics.Color.WHITE)
+            btnVpn.text = "START SHIELD"
+            btnVpn.setBackgroundColor(android.graphics.Color.BLUE)
+        }
     }
 }

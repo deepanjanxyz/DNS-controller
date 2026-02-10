@@ -12,6 +12,7 @@ class MyVpnService : VpnService() {
         if (intent?.action == "STOP") {
             stopVpn()
         } else {
+            // যদি কোনো কারণে আইপি না আসে, তবে ডিফল্ট AdGuard ব্যবহার হবে
             val dnsIp = intent?.getStringExtra("DNS_IP") ?: "94.140.14.14"
             startVpn(dnsIp)
         }
@@ -24,21 +25,34 @@ class MyVpnService : VpnService() {
             val builder = Builder()
             builder.addAddress("10.0.0.2", 32)
             
-            // ইউজার যে DNS IP দেবে সেটাই এখানে সেট হবে
+            // সিলেক্ট করা ডিএনএস বসানো হচ্ছে
             builder.addDnsServer(dnsIp)
             
+            // রুট সেট করা (DNS-Only Mode)
+            // এটা না দিলে অনেক ফোনেই ভিপিএন কানেক্ট দেখায় কিন্তু কাজ করে না
+            builder.addRoute(dnsIp, 32) 
+            
             builder.setBlocking(true)
-            builder.setSession("ABS Custom Shield")
+            builder.setSession("ABS Shield: $dnsIp")
+            
             vpnInterface = builder.establish()
-            Log.d("VPN", "Connected to Custom DNS: $dnsIp")
+            Log.d("VPN", "VPN Started with DNS: $dnsIp")
+            
         } catch (e: Exception) {
-            Log.e("VPN", "Failed: ${e.message}")
+            Log.e("VPN", "Error starting VPN: ${e.message}")
+            e.printStackTrace()
+            stopSelf() // এরর হলে সার্ভিস বন্ধ করে দেবে
         }
     }
 
     private fun stopVpn() {
-        vpnInterface?.close()
-        vpnInterface = null
-        stopSelf()
+        try {
+            vpnInterface?.close()
+            vpnInterface = null
+            stopSelf()
+            Log.d("VPN", "VPN Stopped")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
